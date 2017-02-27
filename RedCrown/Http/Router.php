@@ -10,9 +10,6 @@ use RedCrown\Exception\NotFoundHttpException;
  */
 class Router
 {
-
-    const EXCEPTION = 'kernel.onError';
-
     /**
      * @var array
      */

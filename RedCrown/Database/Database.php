@@ -2,7 +2,6 @@
 
 namespace RedCrown\Database;
 
-
 use PDO;
 use RedCrown\Exception\DatabaseException;
 

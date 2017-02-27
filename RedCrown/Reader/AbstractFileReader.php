@@ -2,7 +2,10 @@
 
 namespace RedCrown\Reader;
 
-
+/**
+ * Class AbstractFileReader
+ * @package RedCrown\Reader
+ */
 abstract class AbstractFileReader implements FileReaderInterface
 {
     /**

@@ -8,7 +8,6 @@ namespace RedCrown\Di;
  */
 class Container implements ContainerInterface
 {
-
     /**
      * @var array
      */
@@ -59,7 +58,7 @@ class Container implements ContainerInterface
             return $this->get($class);
         }
 
-        $this->classes[$class] = $this->get(array_shift($definition), $definition);
+       return $this->classes[$class] = $this->get(array_shift($definition), $definition);
 
     }
 }

@@ -8,7 +8,6 @@ namespace RedCrown\EventDispatcher;
  */
 class EventDispatcher
 {
-
     /**
      * @var array
      */

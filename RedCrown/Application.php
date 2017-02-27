@@ -4,11 +4,11 @@ namespace RedCrown;
 
 use RedCrown\Di\Container;
 use RedCrown\EventDispatcher\EventDispatcher;
+use RedCrown\EventDispatcher\EventSubscriberInterface;
 use RedCrown\Exception\ConfigureApplicationException;
 use RedCrown\Exception\ExceptionEventHandler;
 use RedCrown\Http\HttpEvent;
 use RedCrown\Http\Router;
-
 
 /**
  * Class Application
@@ -118,6 +118,7 @@ class Application
          */
         foreach ($subscribers as $key => $subscriber) {
             $this->container->set($key, [$subscriber]);
+            /** @var $subscriberInstance EventSubscriberInterface */
             $subscriberInstance =  $this->container->get($key);
             $this->dispatcher->addSubscriber($subscriberInstance);
         }

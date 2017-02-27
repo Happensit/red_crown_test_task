@@ -11,7 +11,6 @@ use RedCrown\Reader\FileReaderFactory;
  */
 class EnvParser
 {
-
     /**
      * @var string
      */
