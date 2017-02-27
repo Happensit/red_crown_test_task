@@ -1,0 +1,131 @@
+<?php
+
+namespace RedCrown\Http;
+
+/**
+ * Class Response
+ * @package RedCrown\Http
+ */
+class Response
+{
+
+    //header('X-Powered-By: Test task module');
+
+    /**
+     * @var string
+     */
+    protected $content = '';
+    /**
+     * @var int
+     */
+    protected $statusCode;
+    /**
+     * @var array
+     */
+    protected $headers = [];
+
+    /**
+     * @var array
+     */
+    public static $statusTexts = [
+        200 => 'OK',
+        201 => 'Created',
+        202 => 'Accepted',
+        400 => 'Bad Request',
+        401 => 'Unauthorized',
+        403 => 'Forbidden',
+        404 => 'Not Found',
+        500 => 'Internal Server Error',
+        501 => 'Not Implemented',
+    ];
+
+
+    /**
+     * Response constructor.
+     * @param string $content
+     * @param int $statusCode
+     * @param array $headers
+     */
+    function __construct($content = '', $statusCode = 200, array $headers = [])
+    {
+        $this->content = $content;
+        $this->statusCode = $statusCode;
+        $this->headers = $headers;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+         return header(sprintf('HTTP/1.1 %s %s', $this->getStatusCode(), $this->getStatusText()), "\r\n") .
+            header('X-Powered-By: RedCrown Task') .
+            $this->buildHeaders() . "\r\n" .
+            $this->getContent();
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->content = (string) $content;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @param array $headers
+     */
+    public function setHeaders(array $headers)
+    {
+        $this->headers[] = $headers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @param $statusCode
+     * @return int
+     */
+    public function setStatusCode($statusCode)
+    {
+        $this->statusCode = $statusCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusText()
+    {
+       return self::$statusTexts[$this->getStatusCode()];
+    }
+
+    protected function buildHeaders()
+    {
+        foreach ($this->getHeaders() as $header) {
+            header(sprintf("%s: %s\n", $header[0], $header[1]));
+        }
+    }
+
+}
