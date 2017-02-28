@@ -57,7 +57,7 @@ class UserRepository extends Repository
                 $this->getEntityClass()->getTableName()
             );
 
-            if ($user = parent::findOne($sql)) {
+            if ($user = $this->getDb()->query($sql)->findOne($this->getEntityClass())) {
                 /** $user UserEntity */
                 $userEntityEvent =  new UserEntityEvent($user, $this->getDb());
                 $this->eventDispatcher->dispatch(UserEntityEvent::UPDATE_STATUS, $userEntityEvent);

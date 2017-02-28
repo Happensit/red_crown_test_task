@@ -57,11 +57,9 @@ abstract class Repository implements RepositoryInterface
      */
     public function findOne($conditions = 1, $params = [])
     {
-        if (is_int($conditions)) {
-            $conditions = sprintf('SELECT * FROM %s WHERE %s', $this->entityClass->getTableName(), $conditions);
-        }
+        $conditions = sprintf('SELECT * FROM %s WHERE %s', $this->entityClass->getTableName(), $conditions);
 
-        if (!$result = $this->db->query($conditions, $params)->findOne(get_class($this->entityClass))) {
+        if (!$result = $this->db->query($conditions, $params)->findOne($this->entityClass)) {
             throw new NotFoundHttpException(sprintf("%s not Found", get_class($this->entityClass)));
         }
 
@@ -77,11 +75,9 @@ abstract class Repository implements RepositoryInterface
      */
     public function findAll($conditions = 1, $params = [])
     {
-        if (is_int($conditions)) {
-            $conditions = sprintf("SELECT * FROM %s WHERE %s", $this->entityClass->getTableName(), $conditions);
-        }
+        $conditions = sprintf("SELECT * FROM %s WHERE %s", $this->entityClass->getTableName(), $conditions);
 
-        if (!$result = $this->db->query($conditions, $params)->findAll(get_class($this->entityClass))) {
+        if (!$result = $this->db->query($conditions, $params)->findAll($this->entityClass)) {
             throw new NotFoundHttpException(sprintf("%s not Found", get_class($this->entityClass)));
         }
 

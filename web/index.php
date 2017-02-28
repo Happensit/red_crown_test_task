@@ -27,10 +27,10 @@ $app = new RedCrown\Application('prod', $config);
  * Routes
  */
 $app->router->get("/", function () use ($app) {
+
     $template = $app->getRootDir() . "/App/Views/index.phtml";
 
-    $repository = $app->container->get('App\Repository\UserRepository');
-    $user = $repository->findRandom();
+    $user = $app->container->get('App\Repository\UserRepository')->findRandom();
 
     echo new RedCrown\Http\Response(
         $app->container->get('templater')->render($template, [

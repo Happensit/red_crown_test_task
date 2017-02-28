@@ -80,7 +80,7 @@ class User extends Entity
             self::USER_INACTIVE => 'Неактивный пользователь'
         ];
 
-        return $statuses[$this->status] ?: null;
+        return $statuses[$this->status];
 
     }
 }

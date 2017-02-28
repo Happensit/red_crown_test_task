@@ -89,7 +89,7 @@ class Database
     public function getPdoInstance()
     {
         if (!isset($this->pdo)) {
-            $this->createPdoInstance();
+            return $this->createPdoInstance();
         }
 
         return $this->pdo;
@@ -104,7 +104,6 @@ class Database
     {
         $this->prepare($sql);
         $this->statement->execute($params);
-
         return $this;
     }
 
@@ -114,7 +113,7 @@ class Database
      */
     public function findOne($className)
     {
-        $this->statement->setFetchMode(PDO::FETCH_CLASS, $className);
+        $this->statement->setFetchMode(PDO::FETCH_CLASS, get_class($className));
         return $this->statement->fetch();
     }
 
@@ -124,7 +123,7 @@ class Database
      */
     public function findAll($className)
     {
-        return $this->statement->fetchAll(PDO::FETCH_CLASS, $className);
+        return $this->statement->fetchAll(PDO::FETCH_CLASS, get_class($className));
     }
 
     /**
