@@ -8,6 +8,8 @@ namespace RedCrown\EventDispatcher;
  */
 interface EventSubscriberInterface
 {
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents();
-
 }

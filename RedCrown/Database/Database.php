@@ -35,14 +35,14 @@ class Database
     protected $tablePrefix = '4yu_';
 
     /**
-     * @var Database
+     * @var PDO
      */
-    private $_pdo;
+    private $pdo;
 
     /**
-     * @var
+     * @var \PDOStatement
      */
-    private $_statement;
+    private $statement;
 
     /**
      * Connection constructor.
@@ -67,33 +67,32 @@ class Database
     {
 
         try {
-            $this->_pdo = new PDO(
-                $this->dsn, $this->username, $this->password, [
-                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names='ru_RU', NAMES utf8",
-                    PDO::MYSQL_ATTR_LOCAL_INFILE => true
-                ]
-            );
+            $this->pdo = new PDO($this->dsn, $this->username, $this->password, [
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names='ru_RU', NAMES utf8",
+                PDO::MYSQL_ATTR_LOCAL_INFILE => true
+            ]);
 
-            $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $this->_pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
         } catch (\PDOException $e) {
             throw new DatabaseException("Database connection could not be established. ;( Reason: " . $e->getMessage());
         }
-        
+
+        return $this->pdo;
     }
 
     /**
-     * @return Database
+     * @return PDO|Database
      */
     public function getPdoInstance()
     {
-        if (!isset($this->_pdo)) {
+        if (!isset($this->pdo)) {
             $this->createPdoInstance();
         }
 
-        return $this->_pdo;
+        return $this->pdo;
     }
 
     /**
@@ -104,28 +103,28 @@ class Database
     public function query($sql, $params = [])
     {
         $this->prepare($sql);
-        $this->_statement->execute($params);
+        $this->statement->execute($params);
 
         return $this;
     }
 
     /**
-     * @param $className
+     * @param $className Entity
      * @return mixed
      */
     public function findOne($className)
     {
-        $this->_statement->setFetchMode(PDO::FETCH_CLASS, $className);
-        return $this->_statement->fetch();
+        $this->statement->setFetchMode(PDO::FETCH_CLASS, $className);
+        return $this->statement->fetch();
     }
 
     /**
-     * @param $className
+     * @param $className Entity
      * @return array|false
      */
     public function findAll($className)
     {
-        return $this->_statement->fetchAll(PDO::FETCH_CLASS, $className);
+        return $this->statement->fetchAll(PDO::FETCH_CLASS, $className);
     }
 
     /**
@@ -133,7 +132,7 @@ class Database
      */
     public function findCount()
     {
-        return $this->_statement->fetchColumn();
+        return $this->statement->fetchColumn();
     }
 
     /**
@@ -168,25 +167,28 @@ class Database
     public function execute($sql, $params = [])
     {
         $this->prepare($sql);
-        $this->_statement->execute($params);
-        $rowCount = $this->_statement->rowCount();
-        $this->_statement->closeCursor();
-        $this->_statement = null;
+        $this->statement->execute($params);
+        $rowCount = $this->statement->rowCount();
+        $this->statement->closeCursor();
+        $this->statement = null;
         return $rowCount;
     }
 
     /**
      * Get PDO statement
+     * @param $sql
+     * @return mixed
+     * @throws DatabaseException
      */
     private function prepare($sql)
     {
         try {
-            $this->_statement = $this->getPdoInstance()->prepare($this->normalizeTableName($sql));
+            $this->statement = $this->getPdoInstance()->prepare($this->normalizeTableName($sql));
         } catch (\PDOException $e) {
             throw new DatabaseException($e->getMessage());
         }
 
-        return $this->_statement;
+        return $this->statement;
     }
 
     /**
@@ -195,9 +197,7 @@ class Database
      */
     public function normalizeTableName($sql)
     {
-        $sql = preg_replace('/{{(.*?)}}/', $this->getTablePrefix() . '\1', $sql);
-
-        return $sql;
+        return preg_replace('/{{(.*?)}}/', $this->getTablePrefix() . '\1', $sql);
     }
 
     /**
@@ -215,6 +215,4 @@ class Database
     {
         $this->tablePrefix = $tablePrefix;
     }
-
-
 }

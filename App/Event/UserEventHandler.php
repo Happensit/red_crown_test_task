@@ -17,8 +17,8 @@ class UserEventHandler implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            UserEntityEvent::CHECK_TABLE => 'oncheckTable',
-            UserEntityEvent::IMPORT_DATA => 'importDataToTable',
+            UserEntityEvent::CHECK_TABLE => ['onCheckTable', 'onImportDataToTable'],
+            UserEntityEvent::IMPORT_DATA => 'onImportDataToTable',
             UserEntityEvent::UPDATE_STATUS => 'onUpdateStatus'
         ];
     }
@@ -27,18 +27,18 @@ class UserEventHandler implements EventSubscriberInterface
      * @param UserEntityEvent $event
      * @return bool
      */
-    public function oncheckTable(UserEntityEvent $event)
+    public function onCheckTable(UserEntityEvent $event)
     {
-        $sql = sprintf("CREATE TABLE IF NOT EXISTS %s (
-                `id` int AUTO_INCREMENT PRIMARY KEY,
-                `name` varchar(128) NOT NULL,
+        $sql = sprintf(
+            "CREATE TABLE IF NOT EXISTS %s (
+                `id` INT AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR (128) NOT NULL,
                 `status` BOOLEAN NOT NULL DEFAULT 0
                 ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci",
             $event->getEntity()->getTableName()
         );
 
         return $event->getDb()->execute($sql);
-
     }
 
     /**
@@ -46,12 +46,11 @@ class UserEventHandler implements EventSubscriberInterface
      * @param UserEntityEvent $event
      * @return bool
      */
-    public function importDataToTable(UserEntityEvent $event)
+    public function onImportDataToTable(UserEntityEvent $event)
     {
         $tableName = $event->getEntity()->getTableName();
 
         if (!$event->getDb()->query("SELECT COUNT(*) FROM {$tableName}")->findCount()) {
-
             $sql = sprintf(
                 "SET SESSION character_set_database = cp1251;
                  LOAD DATA LOCAL INFILE '%s'
@@ -65,11 +64,9 @@ class UserEventHandler implements EventSubscriberInterface
             );
 
             $event->getDb()->getPdoInstance()->exec($sql);
-
         }
 
         return true;
-
     }
 
     /**
@@ -85,5 +82,4 @@ class UserEventHandler implements EventSubscriberInterface
             [':id' => $event->getEntity()->getId()]
         );
     }
-
 }

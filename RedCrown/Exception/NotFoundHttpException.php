@@ -32,5 +32,4 @@ class NotFoundHttpException extends \Exception implements RedCrownExceptionInter
     {
         return $this->statusCode;
     }
-
 }

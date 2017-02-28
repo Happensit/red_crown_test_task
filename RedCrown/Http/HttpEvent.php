@@ -46,6 +46,4 @@ class HttpEvent extends Event
     {
         return $this->errorCallback;
     }
-
-
 }

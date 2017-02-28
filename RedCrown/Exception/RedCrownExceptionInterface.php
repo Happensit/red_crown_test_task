@@ -8,10 +8,8 @@ namespace RedCrown\Exception;
  */
 interface RedCrownExceptionInterface
 {
-
     /**
-     * @return mixed
+     * @return integer
      */
     public function getStatusCode();
-
 }

@@ -8,17 +8,16 @@ namespace RedCrown\Http;
  */
 class Response
 {
-
-    //header('X-Powered-By: Test task module');
-
     /**
      * @var string
      */
     protected $content = '';
+
     /**
      * @var int
      */
     protected $statusCode;
+
     /**
      * @var array
      */
@@ -39,14 +38,13 @@ class Response
         501 => 'Not Implemented',
     ];
 
-
     /**
      * Response constructor.
      * @param string $content
      * @param int $statusCode
      * @param array $headers
      */
-    function __construct($content = '', $statusCode = 200, array $headers = [])
+    public function __construct($content = '', $statusCode = 200, array $headers = [])
     {
         $this->content = $content;
         $this->statusCode = $statusCode;
@@ -58,7 +56,7 @@ class Response
      */
     public function __toString()
     {
-         return header(sprintf('HTTP/1.1 %s %s', $this->getStatusCode(), $this->getStatusText()), "\r\n") .
+        return header(sprintf('HTTP/1.1 %s %s', $this->getStatusCode(), $this->getStatusText()), "\r\n") .
             header('X-Powered-By: RedCrown Task') .
             $this->buildHeaders() . "\r\n" .
             $this->getContent();
@@ -77,7 +75,7 @@ class Response
      */
     public function setContent($content)
     {
-        $this->content = (string) $content;
+        $this->content = (string)$content;
     }
 
     /**
@@ -106,7 +104,6 @@ class Response
 
     /**
      * @param $statusCode
-     * @return int
      */
     public function setStatusCode($statusCode)
     {
@@ -118,14 +115,16 @@ class Response
      */
     public function getStatusText()
     {
-       return self::$statusTexts[$this->getStatusCode()];
+        return self::$statusTexts[$this->getStatusCode()];
     }
 
+    /**
+     * Header Builder
+     */
     protected function buildHeaders()
     {
         foreach ($this->getHeaders() as $header) {
             header(sprintf("%s: %s\n", $header[0], $header[1]));
         }
     }
-
 }

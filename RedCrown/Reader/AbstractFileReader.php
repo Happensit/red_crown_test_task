@@ -30,6 +30,4 @@ abstract class AbstractFileReader implements FileReaderInterface
     {
         return file_get_contents($filepath);
     }
-
-
 }

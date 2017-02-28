@@ -8,11 +8,9 @@ namespace RedCrown\Di;
  */
 interface ContainerInterface
 {
-
     /**
      * @param $className
      * @return object
      */
     public function get($className);
-
 }

@@ -17,14 +17,19 @@ class EnvParser
     private $envFile;
 
     /**
+     * @var
+     */
+    private $filePath;
+
+    /**
      * EnvParser constructor.
      * @param $filePath
-     * @param string $file
-     * @throws ConfigureApplicationException
+     * @param string $envFile
      */
-    function __construct($filePath, $file = '.env')
+    public function __construct($filePath, $envFile = '.env')
     {
-        $this->envFile = $filePath . DIRECTORY_SEPARATOR . $file;
+        $this->envFile = $filePath . DIRECTORY_SEPARATOR . $envFile;
+        $this->filePath = $filePath;
     }
 
     public function parse()

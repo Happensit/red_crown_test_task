@@ -2,10 +2,9 @@
 
 namespace RedCrown\Exception;
 
-
 /**
  * Class ConfigureApplicationException
- * @package RedCrown
+ * @package RedCrown\Exception
  */
 class ConfigureApplicationException extends \Exception implements RedCrownExceptionInterface
 {
@@ -33,5 +32,4 @@ class ConfigureApplicationException extends \Exception implements RedCrownExcept
     {
         return $this->statusCode;
     }
-
 }

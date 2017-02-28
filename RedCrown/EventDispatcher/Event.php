@@ -26,6 +26,6 @@ class Event
      */
     public function stopPropagation()
     {
-       return $this->propagationStopped = true;
+        return $this->propagationStopped = true;
     }
 }

@@ -6,6 +6,10 @@ use RedCrown\Database\Database;
 use RedCrown\Database\Entity;
 use RedCrown\EventDispatcher\Event;
 
+/**
+ * Class UserEntityEvent
+ * @package App\Event
+ */
 class UserEntityEvent extends Event
 {
     /**
@@ -32,7 +36,12 @@ class UserEntityEvent extends Event
      */
     private $db;
 
-    function __construct(Entity $entity, Database $db)
+    /**
+     * UserEntityEvent constructor.
+     * @param Entity $entity
+     * @param Database $db
+     */
+    public function __construct(Entity $entity, Database $db)
     {
         $this->entity = $entity;
         $this->db = $db;
@@ -53,5 +62,4 @@ class UserEntityEvent extends Event
     {
         return $this->db;
     }
-
 }

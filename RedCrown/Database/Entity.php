@@ -2,6 +2,8 @@
 
 namespace RedCrown\Database;
 
+use RedCrown\Exception\BadMethodCallException;
+
 /**
  * Class Entity
  * @package RedCrown\Database
@@ -30,17 +32,22 @@ abstract class Entity implements EntityInterface
      * Magic getter
      * @param $name
      * @return mixed
+     * @throws BadMethodCallException
      */
-    function __get($name)
+    public function __get($name)
     {
-        $getter = 'get' . ucwords($name, '_');
-        if (method_exists($this, $getter)) {
+        $getter = 'get' . str_replace('_', '', ucwords($name, '_'));
+
+        if (is_callable([$this, $getter])) {
             return $this->{$getter}();
         }
 
-        if (property_exists($this, $name)) {
-            return $this->$name;
-        }
+        throw new BadMethodCallException(sprintf(
+            'The option "%s" does not have a callable "%s" getter method which must be defined',
+            $name,
+            $getter
+        ));
+
     }
 
     /**
@@ -49,12 +56,15 @@ abstract class Entity implements EntityInterface
      * @param $value
      * @return mixed
      */
-    function __set($name, $value)
+    public function __set($name, $value)
     {
-        $setter = 'set' . ucwords($name, '_');
-        if (method_exists($this, $setter)) {
-            return $this->{$setter}($value);
-        }
-    }
+        $setter = 'set' . str_replace('_', '', ucwords($name, '_'));
 
+        if (is_callable([$this, $setter])) {
+            $this->{$setter}($value);
+
+            return;
+        }
+
+    }
 }

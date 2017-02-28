@@ -16,7 +16,6 @@ use RedCrown\Exception\NotFoundHttpException;
  */
 class UserRepository extends Repository
 {
-
     /**
      * @var EventDispatcher
      */
@@ -48,24 +47,25 @@ class UserRepository extends Repository
      */
     public function findRandom()
     {
-        if ($this->eventDispatcher->dispatch(UserEntityEvent::CHECK_TABLE, new UserEntityEvent($this->getEntityClass(), $this->getDb()))) {
-            $this->eventDispatcher->dispatch(UserEntityEvent::IMPORT_DATA, new UserEntityEvent($this->getEntityClass(), $this->getDb()));
-
-            $sql = sprintf('SELECT u.* FROM %1$s AS u
+        $userEntityEvent = new UserEntityEvent($this->getEntityClass(), $this->getDb());
+        if ($this->eventDispatcher->dispatch(UserEntityEvent::CHECK_TABLE, $userEntityEvent)) {
+            $sql = sprintf(
+                'SELECT u.* FROM %1$s AS u
                           JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM %1$s)) as id) as r
                           WHERE u.id >= r.id
-                          LIMIT 1', $this->getEntityClass()->getTableName());
+                          LIMIT 1',
+                $this->getEntityClass()->getTableName()
+            );
 
             if ($user = parent::findOne($sql)) {
                 /** $user UserEntity */
-                $this->eventDispatcher->dispatch(UserEntityEvent::UPDATE_STATUS, new UserEntityEvent($user, $this->getDb()));
+                $userEntityEvent =  new UserEntityEvent($user, $this->getDb());
+                $this->eventDispatcher->dispatch(UserEntityEvent::UPDATE_STATUS, $userEntityEvent);
             }
 
             return $user;
         }
 
         throw new ConfigureApplicationException("Something wrong, the data have not been received");
-
     }
-
 }

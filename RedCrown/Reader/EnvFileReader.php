@@ -2,7 +2,6 @@
 
 namespace RedCrown\Reader;
 
-
 /**
  * Class EnvFileReader
  * @package RedCrown\Reader

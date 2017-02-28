@@ -41,6 +41,13 @@ class Application
     protected $rootDir;
 
     /**
+     * @var array
+     */
+    protected $defaultSubscribers = [
+        'exceptionEventHandler' => ExceptionEventHandler::class,
+    ];
+
+    /**
      * Application constructor.
      * @param $environment
      * @param array $config
@@ -76,7 +83,10 @@ class Application
      */
     public function exceptionHandler($exception)
     {
-        $this->dispatcher->dispatch(ExceptionEventHandler::EXCEPTION, new HttpEvent($exception, $this->router->getErrorCallback()));
+        $this->dispatcher->dispatch(
+            ExceptionEventHandler::EXCEPTION,
+            new HttpEvent($exception, $this->router->getErrorCallback())
+        );
     }
 
     /**
@@ -85,13 +95,11 @@ class Application
      */
     private function preInit($config)
     {
-        if (array_key_exists('subscribers', $config)) {
-            $this->initializeEventSubscribers($config['subscribers']);
-            unset($config['subscribers']);
-        }
+        $config['subscribers'] = $config['subscribers'] ?: [];
+        $this->initializeEventSubscribers($config['subscribers']);
+        unset($config['subscribers']);
 
         foreach ($config as $key => $properties) {
-
             if (empty($properties['class'])) {
                 throw new ConfigureApplicationException(sprintf(
                     "'%s' key doesn't have value 'class' parameter in config file",
@@ -108,23 +116,23 @@ class Application
      */
     protected function initializeEventSubscribers($subscribers)
     {
-        /**
-         * EventDispatcher Instance
-         */
         $this->dispatcher = $this->container->get(EventDispatcher::class);
+
+        $subscribers = array_unique(array_merge($this->defaultSubscribers, $subscribers));
 
         /**
          * Added subscribers to container
          */
         foreach ($subscribers as $key => $subscriber) {
-            $this->container->set($key, [$subscriber]);
             /** @var $subscriberInstance EventSubscriberInterface */
-            $subscriberInstance =  $this->container->get($key);
+            $subscriberInstance = $this->container->set($key, [$subscriber]);
             $this->dispatcher->addSubscriber($subscriberInstance);
         }
-
     }
 
+    /**
+     * @return string
+     */
     public function getRootDir()
     {
         if (null === $this->rootDir) {
@@ -133,6 +141,4 @@ class Application
 
         return $this->rootDir;
     }
-
-
 }

@@ -81,6 +81,4 @@ class FileReaderFactory
 
         return static::$reader[$reader];
     }
-
-
 }

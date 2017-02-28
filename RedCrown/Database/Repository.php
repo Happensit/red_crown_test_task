@@ -11,21 +11,20 @@ use RedCrown\Exception\NotFoundHttpException;
  */
 abstract class Repository implements RepositoryInterface
 {
-
     /**
      * @var Database
      */
     private $db;
 
     /**
-     * @var
+     * @var Entity
      */
     private $entityClass;
 
     /**
      * @return mixed
      */
-    abstract function getEntityClass();
+    abstract public function getEntityClass();
 
     /**
      * Repository constructor.
@@ -59,10 +58,7 @@ abstract class Repository implements RepositoryInterface
     public function findOne($conditions = 1, $params = [])
     {
         if (is_int($conditions)) {
-            $conditions = sprintf("SELECT * FROM %s WHERE %s",
-                $this->entityClass->getTableName(),
-                $conditions
-            );
+            $conditions = sprintf('SELECT * FROM %s WHERE %s', $this->entityClass->getTableName(), $conditions);
         }
 
         if (!$result = $this->db->query($conditions, $params)->findOne(get_class($this->entityClass))) {
@@ -82,10 +78,7 @@ abstract class Repository implements RepositoryInterface
     public function findAll($conditions = 1, $params = [])
     {
         if (is_int($conditions)) {
-            $conditions = sprintf("SELECT * FROM %s WHERE %s",
-                $this->entityClass->getTableName(),
-                $conditions
-            );
+            $conditions = sprintf("SELECT * FROM %s WHERE %s", $this->entityClass->getTableName(), $conditions);
         }
 
         if (!$result = $this->db->query($conditions, $params)->findAll(get_class($this->entityClass))) {
@@ -95,5 +88,4 @@ abstract class Repository implements RepositoryInterface
         return $result;
 
     }
-
 }

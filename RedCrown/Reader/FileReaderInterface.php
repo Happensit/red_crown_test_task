@@ -2,7 +2,6 @@
 
 namespace RedCrown\Reader;
 
-
 /**
  * Interface FileReaderInterface
  * @package RedCrown\Reader
@@ -23,5 +22,4 @@ interface FileReaderInterface
      * @return string
      */
     public function asString($filepath);
-
 }

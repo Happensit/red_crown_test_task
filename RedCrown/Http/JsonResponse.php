@@ -2,7 +2,6 @@
 
 namespace RedCrown\Http;
 
-
 /**
  * Class JsonResponse
  * @package RedCrown\Http
@@ -14,11 +13,17 @@ class JsonResponse extends Response
      */
     protected $data;
 
+    /**
+     * JsonResponse constructor.
+     * @param null $data
+     * @param int $status
+     * @param array $headers
+     */
     public function __construct($data = null, $status = 200, $headers = [])
     {
         parent::__construct('', $status, $headers);
 
-        if (null === $data) {
+        if (is_null($data)) {
             $data = [];
         }
 
@@ -27,11 +32,14 @@ class JsonResponse extends Response
         $this->setContent($this->data);
     }
 
+    /**
+     * @param $data
+     * @return $this
+     */
     public function setJson($data)
     {
         $this->data = json_encode(['status' => $this->getStatusCode()] + $data);
 
         return $this;
     }
-
 }

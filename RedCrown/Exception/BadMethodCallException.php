@@ -3,10 +3,10 @@
 namespace RedCrown\Exception;
 
 /**
- * Class DatabaseException
+ * Class BadMethodCallException
  * @package RedCrown\Exception
  */
-class DatabaseException extends \Exception implements RedCrownExceptionInterface
+class BadMethodCallException extends \Exception implements RedCrownExceptionInterface
 {
     /**
      * @var int

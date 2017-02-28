@@ -44,7 +44,6 @@ class Container implements ContainerInterface
         $object = $reflection->newInstanceArgs($dependencies);
 
         return $this->classes[$className] = $object;
-
     }
 
     /**
@@ -58,7 +57,6 @@ class Container implements ContainerInterface
             return $this->get($class);
         }
 
-       return $this->classes[$class] = $this->get(array_shift($definition), $definition);
-
+        return $this->classes[$class] = $this->get(array_shift($definition), $definition);
     }
 }

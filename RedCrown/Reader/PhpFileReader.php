@@ -8,7 +8,6 @@ namespace RedCrown\Reader;
  */
 class PhpFileReader extends AbstractFileReader
 {
-
     /**
      * @param string $filepath
      * @param array $data
@@ -22,6 +21,4 @@ class PhpFileReader extends AbstractFileReader
         require $filepath;
         return ob_get_clean();
     }
-
-
 }

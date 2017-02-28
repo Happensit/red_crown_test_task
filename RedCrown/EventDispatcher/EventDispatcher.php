@@ -20,7 +20,7 @@ class EventDispatcher
      */
     public function dispatch($eventName, Event $event = null)
     {
-        if (null === $event) {
+        if (is_null($event)) {
             $event = new Event();
         }
 
@@ -45,12 +45,12 @@ class EventDispatcher
      */
     public function addSubscriber(EventSubscriberInterface $subscriber)
     {
-        foreach ($subscriber->getSubscribedEvents() as $eventName => $params) {
+        foreach ($subscriber::getSubscribedEvents() as $eventName => $params) {
             if (is_string($params)) {
                 $this->addListener($eventName, [$subscriber, $params]);
             } else {
                 foreach ($params as $listener) {
-                    $this->addListener($eventName, [$subscriber, $listener[0]]);
+                    $this->addListener($eventName, [$subscriber, $listener]);
                 }
             }
         }
@@ -81,11 +81,6 @@ class EventDispatcher
     protected function doDispatch($listeners, $eventName, Event $event)
     {
         foreach ($listeners as $listener) {
-
-            if ($event->isPropagationStopped()) {
-                break;
-            }
-
             call_user_func($listener, $event, $eventName, $this);
         }
     }
