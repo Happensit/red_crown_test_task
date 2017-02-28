@@ -29,7 +29,7 @@ class FileReaderFactory
      * @return array
      * @throws FileReaderException
      */
-    public static function getFile($file, $method = 'asArray')
+    public static function getFileContent($file, $method = 'asArray')
     {
         if (!is_file($file) || !is_readable($file)) {
             throw new FileReaderException(sprintf(

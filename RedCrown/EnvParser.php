@@ -26,9 +26,12 @@ class EnvParser
         $this->envFile = $filePath . DIRECTORY_SEPARATOR . $envFile;
     }
 
+    /**
+     * @throws ConfigureApplicationException
+     */
     public function parse()
     {
-        $envContentToArray = FileReaderFactory::getFile($this->envFile);
+        $envContentToArray = FileReaderFactory::getFileContent($this->envFile);
         if (empty($envContentToArray)) {
             throw new ConfigureApplicationException(sprintf("No config lines in %s file", $this->envFile));
         }

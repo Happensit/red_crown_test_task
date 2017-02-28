@@ -95,7 +95,7 @@ class Application
      */
     private function preInit($config)
     {
-        $config['subscribers'] = $config['subscribers'] ?: [];
+        $config['subscribers'] = !empty($config['subscribers']) ? $config['subscribers'] : [];
         $this->initializeEventSubscribers($config['subscribers']);
         unset($config['subscribers']);
 
@@ -112,17 +112,12 @@ class Application
     }
 
     /**
-     * @param $subscribers
+     * @param $subscribers array
      */
-    protected function initializeEventSubscribers($subscribers)
+    protected function initializeEventSubscribers(array $subscribers)
     {
         $this->dispatcher = $this->container->get(EventDispatcher::class);
-
         $subscribers = array_unique(array_merge($this->defaultSubscribers, $subscribers));
-
-        /**
-         * Added subscribers to container
-         */
         foreach ($subscribers as $key => $subscriber) {
             /** @var $subscriberInstance EventSubscriberInterface */
             $subscriberInstance = $this->container->set($key, [$subscriber]);
