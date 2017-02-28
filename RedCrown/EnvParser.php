@@ -17,11 +17,6 @@ class EnvParser
     private $envFile;
 
     /**
-     * @var
-     */
-    private $filePath;
-
-    /**
      * EnvParser constructor.
      * @param $filePath
      * @param string $envFile
@@ -29,7 +24,6 @@ class EnvParser
     public function __construct($filePath, $envFile = '.env')
     {
         $this->envFile = $filePath . DIRECTORY_SEPARATOR . $envFile;
-        $this->filePath = $filePath;
     }
 
     public function parse()
@@ -48,5 +42,4 @@ class EnvParser
         }
 
     }
-
 }
